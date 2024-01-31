@@ -46,11 +46,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletRegistration;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.websocket.server.config.JettyWebSocketServletContainerInitializer;
 import org.glassfish.jersey.server.ServerProperties;
 import org.signal.i18n.HeaderControlledResourceBundleLookup;
 import org.signal.libsignal.zkgroup.GenericServerSecretParams;
+import org.signal.libsignal.zkgroup.ServerPublicParams;
 import org.signal.libsignal.zkgroup.ServerSecretParams;
 import org.signal.libsignal.zkgroup.auth.ServerZkAuthOperations;
 import org.signal.libsignal.zkgroup.profiles.ServerZkProfileOperations;
@@ -209,7 +211,6 @@ import org.whispersystems.textsecuregcm.subscriptions.BankMandateTranslator;
 import org.whispersystems.textsecuregcm.subscriptions.BraintreeManager;
 import org.whispersystems.textsecuregcm.subscriptions.StripeManager;
 import org.whispersystems.textsecuregcm.util.DynamoDbFromConfig;
-import org.whispersystems.textsecuregcm.util.ManagedAwsCrt;
 import org.whispersystems.textsecuregcm.util.SystemMapper;
 import org.whispersystems.textsecuregcm.util.UsernameHashZkProofVerifier;
 import org.whispersystems.textsecuregcm.util.logging.LoggingUnhandledExceptionMapper;
@@ -238,7 +239,6 @@ import reactor.core.scheduler.Schedulers;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.WebIdentityTokenFileCredentialsProvider;
-import software.amazon.awssdk.http.crt.AwsCrtHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
@@ -323,7 +323,6 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
         headerControlledResourceBundleLookup);
     BankMandateTranslator bankMandateTranslator = new BankMandateTranslator(headerControlledResourceBundleLookup);
 
-    environment.lifecycle().manage(new ManagedAwsCrt());
     DynamoDbAsyncClient dynamoDbAsyncClient = DynamoDbFromConfig.asyncClient(config.getDynamoDbClientConfiguration(),
         AWSSDK_CREDENTIALS_PROVIDER);
 
@@ -508,7 +507,7 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     ExternalServiceCredentialsGenerator artCredentialsGenerator = ArtController.credentialsGenerator(
         config.getArtServiceConfiguration());
     ExternalServiceCredentialsGenerator svr2CredentialsGenerator = SecureValueRecovery2Controller.credentialsGenerator(
-            config.getSvr2Configuration());
+        config.getSvr2Configuration());
     ExternalServiceCredentialsGenerator svr3CredentialsGenerator = SecureValueRecovery3Controller.credentialsGenerator(
         config.getSvr3Configuration());
 
@@ -520,10 +519,15 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
         registrationRecoveryPasswords);
     UsernameHashZkProofVerifier usernameHashZkProofVerifier = new UsernameHashZkProofVerifier();
 
+    final boolean useSecondaryCredentialConfiguration = StringUtils.isNotBlank(
+        System.getenv("SIGNAL_USE_SECONDARY_CREDENTIAL_CONFIGURATION"));
+
     RegistrationServiceClient registrationServiceClient = new RegistrationServiceClient(
         config.getRegistrationServiceConfiguration().host(),
         config.getRegistrationServiceConfiguration().port(),
-        config.getRegistrationServiceConfiguration().credentialConfigurationJson(),
+        useSecondaryCredentialConfiguration ? config.getRegistrationServiceConfiguration()
+            .secondaryCredentialConfigurationJson()
+            : config.getRegistrationServiceConfiguration().credentialConfigurationJson(),
         config.getRegistrationServiceConfiguration().identityTokenAudience(),
         config.getRegistrationServiceConfiguration().registrationCaCertificate(),
         registrationCallbackExecutor,
@@ -649,7 +653,6 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     S3Client cdnS3Client = S3Client.builder()
         .credentialsProvider(cdnCredentialsProvider)
         .region(Region.of(config.getCdnConfiguration().region()))
-        .httpClientBuilder(AwsCrtHttpClient.builder())
         .build();
     S3AsyncClient asyncCdnS3Client = S3AsyncClient.builder()
         .credentialsProvider(cdnCredentialsProvider)
@@ -668,9 +671,12 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     PolicySigner profileCdnPolicySigner = new PolicySigner(config.getCdnConfiguration().accessSecret().value(),
         config.getCdnConfiguration().region());
 
-    ServerSecretParams zkSecretParams = new ServerSecretParams(config.getZkConfig().serverSecret().value());
-    GenericServerSecretParams callingGenericZkSecretParams = new GenericServerSecretParams(config.getCallingZkConfig().serverSecret().value());
-    GenericServerSecretParams backupsGenericZkSecretParams = new GenericServerSecretParams(config.getBackupsZkConfig().serverSecret().value());
+//    ServerSecretParams serverSecretParams = ServerSecretParams.generate();
+//    ServerPublicParams serverPublicParams = serverSecretParams.getPublicParams();
+
+    ServerSecretParams zkSecretParams = ServerSecretParams.generate();
+    GenericServerSecretParams callingGenericZkSecretParams = GenericServerSecretParams.generate();
+    GenericServerSecretParams backupsGenericZkSecretParams = GenericServerSecretParams.generate();
     ServerZkProfileOperations zkProfileOperations = new ServerZkProfileOperations(zkSecretParams);
     ServerZkAuthOperations zkAuthOperations = new ServerZkAuthOperations(zkSecretParams);
     ServerZkReceiptOperations zkReceiptOperations = new ServerZkReceiptOperations(zkSecretParams);
@@ -706,13 +712,13 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
         .addService(new KeysAnonymousGrpcService(accountsManager, keysManager))
         .addService(new PaymentsGrpcService(currencyManager))
         .addService(ServerInterceptors.intercept(new ProfileGrpcService(clock, accountsManager, profilesManager, dynamicConfigurationManager,
-                config.getBadges(), asyncCdnS3Client, profileCdnPolicyGenerator, profileCdnPolicySigner, profileBadgeConverter, rateLimiters, zkProfileOperations, config.getCdnConfiguration().bucket()), basicCredentialAuthenticationInterceptor))
+            config.getBadges(), asyncCdnS3Client, profileCdnPolicyGenerator, profileCdnPolicySigner, profileBadgeConverter, rateLimiters, zkProfileOperations, config.getCdnConfiguration().bucket()), basicCredentialAuthenticationInterceptor))
         .addService(new ProfileAnonymousGrpcService(accountsManager, profilesManager, profileBadgeConverter, zkProfileOperations));
 
-    RemoteDeprecationFilter remoteDeprecationFilter = new RemoteDeprecationFilter(dynamicConfigurationManager);
-    environment.servlets()
-        .addFilter("RemoteDeprecationFilter", remoteDeprecationFilter)
-        .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/*");
+//    RemoteDeprecationFilter remoteDeprecationFilter = new RemoteDeprecationFilter(dynamicConfigurationManager);
+//    environment.servlets()
+//        .addFilter("RemoteDeprecationFilter", remoteDeprecationFilter)
+//        .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/*");
 
     // Note: interceptors run in the reverse order they are added; the remote deprecation filter
     // depends on the user-agent context so it has to come first here!
@@ -722,7 +728,7 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
         .intercept(new MetricCollectingServerInterceptor(Metrics.globalRegistry))
         .intercept(new ErrorMappingInterceptor())
         .intercept(new AcceptLanguageInterceptor())
-        .intercept(remoteDeprecationFilter)
+//        .intercept(remoteDeprecationFilter)
         .intercept(new UserAgentInterceptor());
 
     environment.lifecycle().manage(new GrpcServerManagedWrapper(grpcServer.build()));
@@ -868,7 +874,7 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     provisioningEnvironment.jersey().register(new MetricsApplicationEventListener(TrafficSource.WEBSOCKET, clientReleaseManager));
     provisioningEnvironment.jersey().register(new KeepAliveController(clientPresenceManager));
 
-    registerCorsFilter(environment);
+//    registerCorsFilter(environment);
     registerExceptionMappers(environment, webSocketEnvironment, provisioningEnvironment);
     registerProviders(environment, webSocketEnvironment, provisioningEnvironment);
 
@@ -907,11 +913,11 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
             ScoreThresholdProvider.ScoreThresholdFeature.class,
             SenderOverrideProvider.SenderOverrideFeature.class,
             PushChallengeConfigProvider.PushChallengeConfigFeature.class)
-    .forEach(feature -> {
+        .forEach(feature -> {
           environment.jersey().register(feature);
           webSocketEnvironment.jersey().register(feature);
           provisioningEnvironment.jersey().register(feature);
-    });
+        });
   }
 
   private void registerExceptionMappers(Environment environment,

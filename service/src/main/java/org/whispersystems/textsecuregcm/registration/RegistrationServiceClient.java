@@ -38,7 +38,7 @@ import org.whispersystems.textsecuregcm.entities.RegistrationServiceSession;
 public class RegistrationServiceClient implements Managed {
 
   private final ManagedChannel channel;
-  private final IdentityTokenCallCredentials identityTokenCallCredentials;
+  //  private final IdentityTokenCallCredentials identityTokenCallCredentials;
   private final RegistrationServiceGrpc.RegistrationServiceFutureStub stub;
   private final Executor callbackExecutor;
 
@@ -77,10 +77,10 @@ public class RegistrationServiceClient implements Managed {
           .build();
     }
 
-    this.identityTokenCallCredentials = IdentityTokenCallCredentials.fromCredentialConfig(
-        credentialConfigJson, identityTokenAudience, identityRefreshExecutor);
+//    this.identityTokenCallCredentials = IdentityTokenCallCredentials.fromCredentialConfig(
+//        credentialConfigJson, identityTokenAudience, identityRefreshExecutor);
 
-    this.stub = RegistrationServiceGrpc.newFutureStub(channel).withCallCredentials(identityTokenCallCredentials);
+    this.stub = RegistrationServiceGrpc.newFutureStub(channel);
 
     this.callbackExecutor = callbackExecutor;
   }
@@ -284,6 +284,6 @@ public class RegistrationServiceClient implements Managed {
     if (channel != null) {
       channel.shutdown();
     }
-    this.identityTokenCallCredentials.close();
+//    this.identityTokenCallCredentials.close();
   }
 }

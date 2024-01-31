@@ -10,10 +10,10 @@ logging:
       threshold: ALL
       timeZone: UTC
       target: stdout
-    - type: logstashtcpsocket
-      destination: example.com:10516
-      apiKey: secret://datadog.apiKey
-      environment: staging
+#    - type: logstashtcpsocket
+#      destination: example.com:10516
+#      apiKey: secret://datadog.apiKey
+#      environment: staging
 
 metrics:
   reporters:
@@ -40,7 +40,7 @@ metrics:
         - ^lettuce\..+$
   reportOnStop: true
 
-grpcPort: 8080
+grpcPort: 8089
 
 tlsKeyStore:
   password: secret://tlsKeyStore.password
@@ -61,7 +61,7 @@ braintree:
   merchantId: unset
   publicKey: unset
   privateKey: secret://braintree.privateKey
-  environment: unset
+  environment: sandbox
   graphqlUrl: unset
   merchantAccounts:
     # ISO 4217 currency code and its corresponding sub-merchant account
@@ -75,73 +75,73 @@ dynamoDbClientConfiguration:
 
 dynamoDbTables:
   accounts:
-    tableName: Example_Accounts
-    phoneNumberTableName: Example_Accounts_PhoneNumbers
-    phoneNumberIdentifierTableName: Example_Accounts_PhoneNumberIdentifiers
-    usernamesTableName: Example_Accounts_Usernames
+    tableName: Accounts
+    phoneNumberTableName: Accounts_PhoneNumbers
+    phoneNumberIdentifierTableName: Accounts_PhoneNumberIdentifiers
+    usernamesTableName: Accounts_Usernames
   backups:
     tableName: Example_Backups
   clientReleases:
-    tableName: Example_ClientReleases
+    tableName: ClientReleases
   deletedAccounts:
-    tableName: Example_DeletedAccounts
+    tableName: DeletedAccounts
   deletedAccountsLock:
-    tableName: Example_DeletedAccountsLock
+    tableName: DeletedAccountsLock
   issuedReceipts:
-    tableName: Example_IssuedReceipts
+    tableName: IssuedReceipts
     expiration: P30D # Duration of time until rows expire
     generator: abcdefg12345678= # random base64-encoded binary sequence
   ecKeys:
-    tableName: Example_Keys
+    tableName: Keys
   ecSignedPreKeys:
-    tableName: Example_EC_Signed_Pre_Keys
+    tableName: EC_Signed_Pre_Keys
   pqKeys:
-    tableName: Example_PQ_Keys
+    tableName: PQ_Keys
   pqLastResortKeys:
-    tableName: Example_PQ_Last_Resort_Keys
+    tableName: PQ_Last_Resort_Keys
   messages:
-    tableName: Example_Messages
+    tableName: Messages
     expiration: P30D # Duration of time until rows expire
   onetimeDonations:
-    tableName: Example_OnetimeDonations
+    tableName: OnetimeDonations
     expiration: P90D
   phoneNumberIdentifiers:
-    tableName: Example_PhoneNumberIdentifiers
+    tableName: PhoneNumberIdentifiers
   profiles:
-    tableName: Example_Profiles
+    tableName: Profiles
   pushChallenge:
-    tableName: Example_PushChallenge
+    tableName: PushChallenge
   redeemedReceipts:
-    tableName: Example_RedeemedReceipts
+    tableName: RedeemedReceipts
     expiration: P30D # Duration of time until rows expire
   registrationRecovery:
-    tableName: Example_RegistrationRecovery
+    tableName: RegistrationRecovery
     expiration: P300D # Duration of time until rows expire
   remoteConfig:
-    tableName: Example_RemoteConfig
+    tableName: RemoteConfig
   reportMessage:
-    tableName: Example_ReportMessage
+    tableName: ReportMessage
   subscriptions:
-    tableName: Example_Subscriptions
+    tableName: Subscriptions
   clientPublicKeys:
     tableName: Example_ClientPublicKeys
   verificationSessions:
-    tableName: Example_VerificationSessions
+    tableName: VerificationSessions
 
 cacheCluster: # Redis server configuration for cache cluster
-  configurationUri: redis://redis.example.com:6379/
+  configurationUri: redis://127.0.0.1:6379
 
 clientPresenceCluster: # Redis server configuration for client presence cluster
-  configurationUri: redis://redis.example.com:6379/
+  configurationUri: redis://127.0.0.1:6379
 
 pubsub: # Redis server configuration for pubsub cluster
-  uri: redis://redis.example.com:6379/
+  uri: redis://127.0.0.1:6379
 
 pushSchedulerCluster: # Redis server configuration for push scheduler cluster
-  configurationUri: redis://redis.example.com:6379/
+  configurationUri: redis://127.0.0.1:6379
 
 rateLimitersCluster: # Redis server configuration for rate limiters cluster
-  configurationUri: redis://redis.example.com:6379/
+  configurationUri: redis://127.0.0.1:6379
 
 directoryV2:
   client: # Configuration for interfacing with Contact Discovery Service v2 cluster
@@ -155,25 +155,19 @@ svr2:
   svrCaCertificates:
     - |
       -----BEGIN CERTIFICATE-----
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      AAAAAAAAAAAAAAAAAAAA
+      MIICUTCCAfugAwIBAgIBADANBgkqhkiG9w0BAQQFADBXMQswCQYDVQQGEwJDTjEL
+      MAkGA1UECBMCUE4xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJPTjELMAkGA1UECxMC
+      VU4xFDASBgNVBAMTC0hlcm9uZyBZYW5nMB4XDTA1MDcxNTIxMTk0N1oXDTA1MDgx
+      NDIxMTk0N1owVzELMAkGA1UEBhMCQ04xCzAJBgNVBAgTAlBOMQswCQYDVQQHEwJD
+      TjELMAkGA1UEChMCT04xCzAJBgNVBAsTAlVOMRQwEgYDVQQDEwtIZXJvbmcgWWFu
+      ZzBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCp5hnG7ogBhtlynpOS21cBewKE/B7j
+      V14qeyslnr26xZUsSVko36ZnhiaO/zbMOoRcKK9vEcgMtcLFuQTWDl3RAgMBAAGj
+      gbEwga4wHQYDVR0OBBYEFFXI70krXeQDxZgbaCQoR4jUDncEMH8GA1UdIwR4MHaA
+      FFXI70krXeQDxZgbaCQoR4jUDncEoVukWTBXMQswCQYDVQQGEwJDTjELMAkGA1UE
+      CBMCUE4xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJPTjELMAkGA1UECxMCVU4xFDAS
+      BgNVBAMTC0hlcm9uZyBZYW5nggEAMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEE
+      BQADQQA/ugzBrjjK9jcWnDVfGHlk3icNRq0oV7Ri32z/+HQX67aRfgZu7KWdI+Ju
+      Wm7DCfrPNGVwFWUQOmsPue9rZBgO
       -----END CERTIFICATE-----
 
 svr3:
@@ -183,35 +177,29 @@ svr3:
   svrCaCertificates:
     - |
       -----BEGIN CERTIFICATE-----
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      AAAAAAAAAAAAAAAAAAAA
+      MIICUTCCAfugAwIBAgIBADANBgkqhkiG9w0BAQQFADBXMQswCQYDVQQGEwJDTjEL
+      MAkGA1UECBMCUE4xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJPTjELMAkGA1UECxMC
+      VU4xFDASBgNVBAMTC0hlcm9uZyBZYW5nMB4XDTA1MDcxNTIxMTk0N1oXDTA1MDgx
+      NDIxMTk0N1owVzELMAkGA1UEBhMCQ04xCzAJBgNVBAgTAlBOMQswCQYDVQQHEwJD
+      TjELMAkGA1UEChMCT04xCzAJBgNVBAsTAlVOMRQwEgYDVQQDEwtIZXJvbmcgWWFu
+      ZzBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCp5hnG7ogBhtlynpOS21cBewKE/B7j
+      V14qeyslnr26xZUsSVko36ZnhiaO/zbMOoRcKK9vEcgMtcLFuQTWDl3RAgMBAAGj
+      gbEwga4wHQYDVR0OBBYEFFXI70krXeQDxZgbaCQoR4jUDncEMH8GA1UdIwR4MHaA
+      FFXI70krXeQDxZgbaCQoR4jUDncEoVukWTBXMQswCQYDVQQGEwJDTjELMAkGA1UE
+      CBMCUE4xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJPTjELMAkGA1UECxMCVU4xFDAS
+      BgNVBAMTC0hlcm9uZyBZYW5nggEAMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEE
+      BQADQQA/ugzBrjjK9jcWnDVfGHlk3icNRq0oV7Ri32z/+HQX67aRfgZu7KWdI+Ju
+      Wm7DCfrPNGVwFWUQOmsPue9rZBgO
       -----END CERTIFICATE-----
 
 
 messageCache: # Redis server configuration for message store cache
   persistDelayMinutes: 1
   cluster:
-    configurationUri: redis://redis.example.com:6379/
+    configurationUri: redis://127.0.0.1:6379
 
 metricsCluster:
-  configurationUri: redis://redis.example.com:6379/
+  configurationUri: redis://127.0.0.1:6379
 
 awsAttachments: # AWS S3 configuration
   accessKey: secret://awsAttachments.accessKey
@@ -252,25 +240,19 @@ clientCdn:
   caCertificates:
     - |
       -----BEGIN CERTIFICATE-----
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      AAAAAAAAAAAAAAAAAAAA
+      MIICUTCCAfugAwIBAgIBADANBgkqhkiG9w0BAQQFADBXMQswCQYDVQQGEwJDTjEL
+      MAkGA1UECBMCUE4xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJPTjELMAkGA1UECxMC
+      VU4xFDASBgNVBAMTC0hlcm9uZyBZYW5nMB4XDTA1MDcxNTIxMTk0N1oXDTA1MDgx
+      NDIxMTk0N1owVzELMAkGA1UEBhMCQ04xCzAJBgNVBAgTAlBOMQswCQYDVQQHEwJD
+      TjELMAkGA1UEChMCT04xCzAJBgNVBAsTAlVOMRQwEgYDVQQDEwtIZXJvbmcgWWFu
+      ZzBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCp5hnG7ogBhtlynpOS21cBewKE/B7j
+      V14qeyslnr26xZUsSVko36ZnhiaO/zbMOoRcKK9vEcgMtcLFuQTWDl3RAgMBAAGj
+      gbEwga4wHQYDVR0OBBYEFFXI70krXeQDxZgbaCQoR4jUDncEMH8GA1UdIwR4MHaA
+      FFXI70krXeQDxZgbaCQoR4jUDncEoVukWTBXMQswCQYDVQQGEwJDTjELMAkGA1UE
+      CBMCUE4xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJPTjELMAkGA1UECxMCVU4xFDAS
+      BgNVBAMTC0hlcm9uZyBZYW5nggEAMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEE
+      BQADQQA/ugzBrjjK9jcWnDVfGHlk3icNRq0oV7Ri32z/+HQX67aRfgZu7KWdI+Ju
+      Wm7DCfrPNGVwFWUQOmsPue9rZBgO
       -----END CERTIFICATE-----
 
 cdn3StorageManager:
@@ -289,7 +271,20 @@ unidentifiedDelivery:
 
 recaptcha:
   projectPath: projects/example
-  credentialConfigurationJson: "{ }" # service account configuration for backend authentication
+  credentialConfigurationJson: |
+    {
+      "type": "service_account",
+      "project_id": "signal-app-1701950355360",
+      "private_key_id": "234586f92cd7ff5842d97313be77b1183e064e7c",
+      "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDAWzc/XBNhFxWY\nA+je8YbV0//G66yfZciTgpHu/yBdG8dFZQ1RHkq3hd2PloZ7dz3i5t/F2D4eyMKW\n/1Ez2HNGEJwM65/XHHH4MPJIZDqkNO+Ei0GKq+c1Vnq4mQwRtY21PsxRgaWX1qy7\nnHvwHhyqPb5dCkyyFN6I1tHS4f2dNesuizv143T0AS0v14DPhHgKjJAff62hbc45\nbomxxQ/4mUhAzZCnrvTuWApEcV/VbikPDgznx2nCnBGKvAlpnlmwYdd4HD6pt7CR\nzJIruSWaeojxkAhv7zGVJdshvNvt9kYjmjUXqQXj9oGK2o34fyw2A1oLZfZ03pEE\nV638+7lhAgMBAAECggEAEPV5z3o8syin3LkrhMxiiOOh/1Wz6HG+11KBr0KLBep3\nDSU1oVs8VyXUPN6WiLggmqqkO/suruQgU9O6wwloUFsShwkXFI4LdkhKdBtyGBwa\nqeLlKmaxgcBYHYJQ0BbjoYEh3mXBxbtFi1zmiGr/N/stl2JbFLBGVmYqJZ+LDpsU\n9GvnXGrzhagKQyOBdsTZ4m3KjZHtsZGAAmXtQsqz58wKQk+PV6bwM6SCl4/fOQdk\niMMQowmu0+rlvqL3g6AtuwIPFw+YWPfBkwqoBxCkfm01ZEGFZzRORhHtBlD39SVm\nZS7Ew9wtoTPPqNRkV/ZhgP4qksfDOBrnbZODPnlDaQKBgQD5pPTN5R/fBxAe75Q1\negGPARVDCid0DSoVXTft6+djHfadBtVc3JiHQnGaC7/T+d4CEM5oWHJ9BtTRgQK8\nsZYX4NURRE5+9e1xzaAu3rTiBaB+EHK2pSjnz0LP6DYOceuq91TUOKapHaRR2FMQ\nuxcdBw7biVnByHlHfZg5bsjwUwKBgQDFQONEI0UjltSGtgnY1c67sxVuE0kEKx4r\nWfTfnitbZcI2VOpk61R2mHZsJGF+tAPPcAtMvalgvomXV2eubn93/RsUqbdEgbg7\noSlT5QuMukJYywJ8NIBlfezUzmUeNHiuuvksppw3JFz1c29sY0zhC1j/1uxOMxSV\nF1IpDwSI+wKBgQCXLRyOPs1RGw7ZHQ4sYCjnd6lvgounzH0KmPvQmYXy0OdR6hx0\n8qVva34t4iWVcX/O0mycZctXCTcBc9W7fPM+nImKvkmmurjCrNnu6DCzmuK41K8T\nCes+jZWRH7b0gmpLiyGUroXGbcvfQFf1DscNbgPCUGfJYOSItXbkeME4PwKBgQCQ\npevC3MZnucSx4K5J50hJ1qKhbNz/hIsEKVxr23ZZ+L45z31vci8nJNi6ptcj7ehZ\nZwWySeb6fd8yLzNl87vgBqikN2ygfSvX9m/zCKS2lyPuLzjsUifRxU02JQB77OiO\n4ae1+ZvWyACvMe6EojEPWp3yRu5UzhqK1mY2m7+snwKBgFYeha4BTfBk6U3KsBBk\nrjzkKCuVZFodnfn9bPMa6tGdfSYlTmfV52m0ezBlpV8V++UTwi5XdYGAcrO1seyW\nM5CtRAERLprfhn5JJTNqCuPyadScnhDEnbhQbbFpR28Mgtw8ALaqiAdtZg9D0y0Y\njQdsplpbkzDz7gG7gPIlNqD0\n-----END PRIVATE KEY-----\n",
+      "client_email": "signal-app-admin@signal-app-1701950355360.iam.gserviceaccount.com",
+      "client_id": "112025531723331561331",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/signal-app-admin%40signal-app-1701950355360.iam.gserviceaccount.com",
+      "universe_domain": "googleapis.com"
+    } # service account configuration for backend authentication
 
 hCaptcha:
   apiKey: secret://hCaptcha.apiKey
@@ -303,25 +298,19 @@ storageService:
   storageCaCertificates:
     - |
       -----BEGIN CERTIFICATE-----
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-      AAAAAAAAAAAAAAAAAAAA
+      MIICUTCCAfugAwIBAgIBADANBgkqhkiG9w0BAQQFADBXMQswCQYDVQQGEwJDTjEL
+      MAkGA1UECBMCUE4xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJPTjELMAkGA1UECxMC
+      VU4xFDASBgNVBAMTC0hlcm9uZyBZYW5nMB4XDTA1MDcxNTIxMTk0N1oXDTA1MDgx
+      NDIxMTk0N1owVzELMAkGA1UEBhMCQ04xCzAJBgNVBAgTAlBOMQswCQYDVQQHEwJD
+      TjELMAkGA1UEChMCT04xCzAJBgNVBAsTAlVOMRQwEgYDVQQDEwtIZXJvbmcgWWFu
+      ZzBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCp5hnG7ogBhtlynpOS21cBewKE/B7j
+      V14qeyslnr26xZUsSVko36ZnhiaO/zbMOoRcKK9vEcgMtcLFuQTWDl3RAgMBAAGj
+      gbEwga4wHQYDVR0OBBYEFFXI70krXeQDxZgbaCQoR4jUDncEMH8GA1UdIwR4MHaA
+      FFXI70krXeQDxZgbaCQoR4jUDncEoVukWTBXMQswCQYDVQQGEwJDTjELMAkGA1UE
+      CBMCUE4xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJPTjELMAkGA1UECxMCVU4xFDAS
+      BgNVBAMTC0hlcm9uZyBZYW5nggEAMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEE
+      BQADQQA/ugzBrjjK9jcWnDVfGHlk3icNRq0oV7Ri32z/+HQX67aRfgZu7KWdI+Ju
+      Wm7DCfrPNGVwFWUQOmsPue9rZBgO
       -----END CERTIFICATE-----
 
 zkConfig:
@@ -419,34 +408,67 @@ registrationService:
   port: 443
   credentialConfigurationJson: |
     {
-      "example": "example"
+      "type": "service_account",
+      "project_id": "signal-app-1701950355360",
+      "private_key_id": "234586f92cd7ff5842d97313be77b1183e064e7c",
+      "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDAWzc/XBNhFxWY\nA+je8YbV0//G66yfZciTgpHu/yBdG8dFZQ1RHkq3hd2PloZ7dz3i5t/F2D4eyMKW\n/1Ez2HNGEJwM65/XHHH4MPJIZDqkNO+Ei0GKq+c1Vnq4mQwRtY21PsxRgaWX1qy7\nnHvwHhyqPb5dCkyyFN6I1tHS4f2dNesuizv143T0AS0v14DPhHgKjJAff62hbc45\nbomxxQ/4mUhAzZCnrvTuWApEcV/VbikPDgznx2nCnBGKvAlpnlmwYdd4HD6pt7CR\nzJIruSWaeojxkAhv7zGVJdshvNvt9kYjmjUXqQXj9oGK2o34fyw2A1oLZfZ03pEE\nV638+7lhAgMBAAECggEAEPV5z3o8syin3LkrhMxiiOOh/1Wz6HG+11KBr0KLBep3\nDSU1oVs8VyXUPN6WiLggmqqkO/suruQgU9O6wwloUFsShwkXFI4LdkhKdBtyGBwa\nqeLlKmaxgcBYHYJQ0BbjoYEh3mXBxbtFi1zmiGr/N/stl2JbFLBGVmYqJZ+LDpsU\n9GvnXGrzhagKQyOBdsTZ4m3KjZHtsZGAAmXtQsqz58wKQk+PV6bwM6SCl4/fOQdk\niMMQowmu0+rlvqL3g6AtuwIPFw+YWPfBkwqoBxCkfm01ZEGFZzRORhHtBlD39SVm\nZS7Ew9wtoTPPqNRkV/ZhgP4qksfDOBrnbZODPnlDaQKBgQD5pPTN5R/fBxAe75Q1\negGPARVDCid0DSoVXTft6+djHfadBtVc3JiHQnGaC7/T+d4CEM5oWHJ9BtTRgQK8\nsZYX4NURRE5+9e1xzaAu3rTiBaB+EHK2pSjnz0LP6DYOceuq91TUOKapHaRR2FMQ\nuxcdBw7biVnByHlHfZg5bsjwUwKBgQDFQONEI0UjltSGtgnY1c67sxVuE0kEKx4r\nWfTfnitbZcI2VOpk61R2mHZsJGF+tAPPcAtMvalgvomXV2eubn93/RsUqbdEgbg7\noSlT5QuMukJYywJ8NIBlfezUzmUeNHiuuvksppw3JFz1c29sY0zhC1j/1uxOMxSV\nF1IpDwSI+wKBgQCXLRyOPs1RGw7ZHQ4sYCjnd6lvgounzH0KmPvQmYXy0OdR6hx0\n8qVva34t4iWVcX/O0mycZctXCTcBc9W7fPM+nImKvkmmurjCrNnu6DCzmuK41K8T\nCes+jZWRH7b0gmpLiyGUroXGbcvfQFf1DscNbgPCUGfJYOSItXbkeME4PwKBgQCQ\npevC3MZnucSx4K5J50hJ1qKhbNz/hIsEKVxr23ZZ+L45z31vci8nJNi6ptcj7ehZ\nZwWySeb6fd8yLzNl87vgBqikN2ygfSvX9m/zCKS2lyPuLzjsUifRxU02JQB77OiO\n4ae1+ZvWyACvMe6EojEPWp3yRu5UzhqK1mY2m7+snwKBgFYeha4BTfBk6U3KsBBk\nrjzkKCuVZFodnfn9bPMa6tGdfSYlTmfV52m0ezBlpV8V++UTwi5XdYGAcrO1seyW\nM5CtRAERLprfhn5JJTNqCuPyadScnhDEnbhQbbFpR28Mgtw8ALaqiAdtZg9D0y0Y\njQdsplpbkzDz7gG7gPIlNqD0\n-----END PRIVATE KEY-----\n",
+      "client_email": "signal-app-admin@signal-app-1701950355360.iam.gserviceaccount.com",
+      "client_id": "112025531723331561331",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/signal-app-admin%40signal-app-1701950355360.iam.gserviceaccount.com",
+      "universe_domain": "googleapis.com",
+      "credential_source": {
+        "environment_id": "aws1",
+        "region_url": "http://169.254.169.254/<example_url>",
+        "url": "http://169.254.169.254/<example_url>",
+        "regional_cred_verification_url": "https://sts.{region}.amazonaws.com<example-url>"
+      }
+    }
+  secondaryCredentialConfigurationJson: |
+    {
+      "type": "service_account",
+      "project_id": "signal-app-1701950355360",
+      "private_key_id": "234586f92cd7ff5842d97313be77b1183e064e7c",
+      "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDAWzc/XBNhFxWY\nA+je8YbV0//G66yfZciTgpHu/yBdG8dFZQ1RHkq3hd2PloZ7dz3i5t/F2D4eyMKW\n/1Ez2HNGEJwM65/XHHH4MPJIZDqkNO+Ei0GKq+c1Vnq4mQwRtY21PsxRgaWX1qy7\nnHvwHhyqPb5dCkyyFN6I1tHS4f2dNesuizv143T0AS0v14DPhHgKjJAff62hbc45\nbomxxQ/4mUhAzZCnrvTuWApEcV/VbikPDgznx2nCnBGKvAlpnlmwYdd4HD6pt7CR\nzJIruSWaeojxkAhv7zGVJdshvNvt9kYjmjUXqQXj9oGK2o34fyw2A1oLZfZ03pEE\nV638+7lhAgMBAAECggEAEPV5z3o8syin3LkrhMxiiOOh/1Wz6HG+11KBr0KLBep3\nDSU1oVs8VyXUPN6WiLggmqqkO/suruQgU9O6wwloUFsShwkXFI4LdkhKdBtyGBwa\nqeLlKmaxgcBYHYJQ0BbjoYEh3mXBxbtFi1zmiGr/N/stl2JbFLBGVmYqJZ+LDpsU\n9GvnXGrzhagKQyOBdsTZ4m3KjZHtsZGAAmXtQsqz58wKQk+PV6bwM6SCl4/fOQdk\niMMQowmu0+rlvqL3g6AtuwIPFw+YWPfBkwqoBxCkfm01ZEGFZzRORhHtBlD39SVm\nZS7Ew9wtoTPPqNRkV/ZhgP4qksfDOBrnbZODPnlDaQKBgQD5pPTN5R/fBxAe75Q1\negGPARVDCid0DSoVXTft6+djHfadBtVc3JiHQnGaC7/T+d4CEM5oWHJ9BtTRgQK8\nsZYX4NURRE5+9e1xzaAu3rTiBaB+EHK2pSjnz0LP6DYOceuq91TUOKapHaRR2FMQ\nuxcdBw7biVnByHlHfZg5bsjwUwKBgQDFQONEI0UjltSGtgnY1c67sxVuE0kEKx4r\nWfTfnitbZcI2VOpk61R2mHZsJGF+tAPPcAtMvalgvomXV2eubn93/RsUqbdEgbg7\noSlT5QuMukJYywJ8NIBlfezUzmUeNHiuuvksppw3JFz1c29sY0zhC1j/1uxOMxSV\nF1IpDwSI+wKBgQCXLRyOPs1RGw7ZHQ4sYCjnd6lvgounzH0KmPvQmYXy0OdR6hx0\n8qVva34t4iWVcX/O0mycZctXCTcBc9W7fPM+nImKvkmmurjCrNnu6DCzmuK41K8T\nCes+jZWRH7b0gmpLiyGUroXGbcvfQFf1DscNbgPCUGfJYOSItXbkeME4PwKBgQCQ\npevC3MZnucSx4K5J50hJ1qKhbNz/hIsEKVxr23ZZ+L45z31vci8nJNi6ptcj7ehZ\nZwWySeb6fd8yLzNl87vgBqikN2ygfSvX9m/zCKS2lyPuLzjsUifRxU02JQB77OiO\n4ae1+ZvWyACvMe6EojEPWp3yRu5UzhqK1mY2m7+snwKBgFYeha4BTfBk6U3KsBBk\nrjzkKCuVZFodnfn9bPMa6tGdfSYlTmfV52m0ezBlpV8V++UTwi5XdYGAcrO1seyW\nM5CtRAERLprfhn5JJTNqCuPyadScnhDEnbhQbbFpR28Mgtw8ALaqiAdtZg9D0y0Y\njQdsplpbkzDz7gG7gPIlNqD0\n-----END PRIVATE KEY-----\n",
+      "client_email": "signal-app-admin@signal-app-1701950355360.iam.gserviceaccount.com",
+      "client_id": "112025531723331561331",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/signal-app-admin%40signal-app-1701950355360.iam.gserviceaccount.com",
+      "universe_domain": "googleapis.com",
+      "credential_source": {
+        "environment_id": "aws1",
+        "region_url": "http://169.254.169.254/<example_url>",
+        "url": "http://169.254.169.254/<example_url>",
+        "regional_cred_verification_url": "https://sts.{region}.amazonaws.com<example-url>"
+      }
     }
   identityTokenAudience: https://registration.example.com
   registrationCaCertificate: | # Registration service TLS certificate trust root
     -----BEGIN CERTIFICATE-----
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ/0123456789+abcdefghijklmnopqrstuvwxyz
-    AAAAAAAAAAAAAAAAAAAA
+    MIICUTCCAfugAwIBAgIBADANBgkqhkiG9w0BAQQFADBXMQswCQYDVQQGEwJDTjEL
+    MAkGA1UECBMCUE4xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJPTjELMAkGA1UECxMC
+    VU4xFDASBgNVBAMTC0hlcm9uZyBZYW5nMB4XDTA1MDcxNTIxMTk0N1oXDTA1MDgx
+    NDIxMTk0N1owVzELMAkGA1UEBhMCQ04xCzAJBgNVBAgTAlBOMQswCQYDVQQHEwJD
+    TjELMAkGA1UEChMCT04xCzAJBgNVBAsTAlVOMRQwEgYDVQQDEwtIZXJvbmcgWWFu
+    ZzBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCp5hnG7ogBhtlynpOS21cBewKE/B7j
+    V14qeyslnr26xZUsSVko36ZnhiaO/zbMOoRcKK9vEcgMtcLFuQTWDl3RAgMBAAGj
+    gbEwga4wHQYDVR0OBBYEFFXI70krXeQDxZgbaCQoR4jUDncEMH8GA1UdIwR4MHaA
+    FFXI70krXeQDxZgbaCQoR4jUDncEoVukWTBXMQswCQYDVQQGEwJDTjELMAkGA1UE
+    CBMCUE4xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJPTjELMAkGA1UECxMCVU4xFDAS
+    BgNVBAMTC0hlcm9uZyBZYW5nggEAMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEE
+    BQADQQA/ugzBrjjK9jcWnDVfGHlk3icNRq0oV7Ri32z/+HQX67aRfgZu7KWdI+Ju
+    Wm7DCfrPNGVwFWUQOmsPue9rZBgO
     -----END CERTIFICATE-----
 
 turn:
   secret: secret://turn.secret
+
+commandStopListener:
+  path: /example/path
 
 linkDevice:
   secret: secret://linkDevice.secret

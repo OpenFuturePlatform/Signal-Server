@@ -31,7 +31,7 @@
 
   <modules>
     <module>api-doc</module>
-    <module>integration-tests</module>
+<!--    <module>integration-tests</module>-->
     <module>service</module>
     <module>websocket-resources</module>
   </modules>

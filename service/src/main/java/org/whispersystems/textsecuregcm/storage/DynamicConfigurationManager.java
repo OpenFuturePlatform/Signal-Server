@@ -85,31 +85,31 @@ public class DynamicConfigurationManager<T> {
   }
 
   public void start() {
-    configuration.set(retrieveInitialDynamicConfiguration());
-    synchronized (this) {
-      this.initialized = true;
-      this.notifyAll();
-    }
-
-    final Thread workerThread = new Thread(() -> {
-      while (true) {
-        try {
-          retrieveDynamicConfiguration().ifPresent(configuration::set);
-        } catch (Exception e) {
-          logger.warn("Error retrieving dynamic configuration", e);
-        }
-
-        Util.sleep(5000);
-      }
-    }, "DynamicConfigurationManagerWorker");
-
-    workerThread.setDaemon(true);
-    workerThread.start();
+//    configuration.set(retrieveInitialDynamicConfiguration());
+//    synchronized (this) {
+//      this.initialized = true;
+//      this.notifyAll();
+//    }
+//
+//    final Thread workerThread = new Thread(() -> {
+//      while (true) {
+//        try {
+//          retrieveDynamicConfiguration().ifPresent(configuration::set);
+//        } catch (Exception e) {
+//          logger.warn("Error retrieving dynamic configuration", e);
+//        }
+//
+//        Util.sleep(5000);
+//      }
+//    }, "DynamicConfigurationManagerWorker");
+//
+//    workerThread.setDaemon(true);
+//    workerThread.start();
   }
 
   private Optional<T> retrieveDynamicConfiguration() throws JsonProcessingException {
     if (configurationToken == null) {
-        logger.error("Invalid configuration token, will not be able to fetch configuration updates");
+      logger.error("Invalid configuration token, will not be able to fetch configuration updates");
     }
     GetLatestConfigurationResponse latestConfiguration;
     try {

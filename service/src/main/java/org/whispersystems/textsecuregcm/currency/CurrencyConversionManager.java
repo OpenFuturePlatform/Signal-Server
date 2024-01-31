@@ -83,13 +83,13 @@ public class CurrencyConversionManager implements Managed {
 
   @Override
   public void start() throws Exception {
-    executor.scheduleAtFixedRate(() -> {
-      try {
-        updateCacheIfNecessary();
-      } catch (Throwable t) {
-        logger.warn("Error updating currency conversions", t);
-      }
-    }, 0, 15, TimeUnit.SECONDS);
+//    executor.scheduleAtFixedRate(() -> {
+//      try {
+//        updateCacheIfNecessary();
+//      } catch (Throwable t) {
+//        logger.warn("Error updating currency conversions", t);
+//      }
+//    }, 0, 15, TimeUnit.SECONDS);
   }
 
   @VisibleForTesting
